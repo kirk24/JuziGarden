@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>桔子的勇气花园 · 周挑战</title>
+    <style>
+        :root {
+            --pink: #FF69B4;
+            --pink-light: #FFB6C1;
+            --purple: #9370DB;
+            --indigo: #4B0082;
+            --lavender-blush: #FFF0F5;
+            --card-shadow: rgba(255, 121, 198, 0.25);
+            --soft-white: #FFFAFE;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Fredoka', 'PingFang SC', 'Comic Sans MS', 'Microsoft YaHei', sans-serif;
+            background: var(--lavender-blush);
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--indigo);
+            padding-bottom: calc(20px + env(safe-area-inset-bottom));
+        }
+
+        .garden {
+            width: min(960px, 100%);
+            background: var(--soft-white);
+            border-radius: 30px;
+            box-shadow: 0 25px 60px var(--card-shadow);
+            padding: clamp(24px, 4vw, 48px);
+            border: 4px solid rgba(255, 105, 180, 0.2);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: clamp(28px, 5vw, 52px);
+            margin-bottom: 10px;
+            color: var(--pink);
+            text-shadow: 0 4px 0 rgba(255, 255, 255, 0.6);
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #a14f7f;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            position: relative;
+            z-index: 1;
+            margin-bottom: clamp(24px, 4vw, 36px);
+        }
+
+        .section-card {
+            background: #FFFFFF;
+            border-radius: 24px;
+            padding: clamp(20px, 4vw, 32px);
+            border: 3px solid rgba(255, 105, 180, 0.2);
+            box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.9);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--purple);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .pits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 18px;
+            margin: 10px auto 20px;
+        }
+
+        .pit {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            position: relative;
+        }
+
+        .pit:hover {
+            transform: translateY(-2px);
+        }
+
+        .pit.selected .pit-circle {
+            box-shadow: 0 0 0 4px rgba(255, 105, 180, 0.5), 0 0 20px rgba(147, 112, 219, 0.6);
+            border-width: 4px;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            color: #AAAAAA;
+            border: 1px solid #E0E0E0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s ease;
+            line-height: 1;
+        }
+
+        .delete-btn:hover {
+            background: #F0F0F0;
+            color: #888888;
+            transform: scale(1.1);
+        }
+
+        .delete-btn:active {
+            transform: scale(0.95);
+        }
+
+        .pit-circle {
+            width: clamp(70px, 12vw, 110px);
+            aspect-ratio: 1 / 1;
+            border-radius: 50%;
+            border: 3px dashed rgba(147, 112, 219, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(28px, 5vw, 48px);
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+
+        .pit-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--indigo);
+        }
+
+        .pit-circle.success {
+            background: radial-gradient(circle at top, #FFD6F2 0%, #FFB0E0 70%, #FF92D2 100%);
+            border-color: var(--pink);
+            box-shadow: 0 10px 25px rgba(255, 105, 180, 0.3);
+        }
+
+        .pit-circle.fail {
+            background: #F5F1F7;
+            border-color: #C0C0C0;
+            color: #9E9E9E;
+        }
+
+        .pit-circle.today {
+            border-style: solid;
+            border-color: var(--purple);
+            animation: pulse 1.5s infinite;
+        }
+
+        .pit-circle.empty {
+            color: rgba(75, 0, 130, 0.2);
+            border-style: dashed;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(147, 112, 219, 0.4); }
+            70% { box-shadow: 0 0 0 12px rgba(147, 112, 219, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(147, 112, 219, 0); }
+        }
+
+        .grand-prize {
+            margin-top: 24px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .grand-prize.active { display: flex; }
+
+        .gift-box {
+            width: clamp(120px, 25vw, 200px);
+            aspect-ratio: 1 / 1;
+            background: radial-gradient(circle, #FF9BD4 0%, #FF7FC0 60%, #F053AF 100%);
+            border-radius: 26px;
+            box-shadow: 0 20px 40px rgba(255, 126, 204, 0.35);
+            position: relative;
+            cursor: pointer;
+            animation: wobble 1.5s ease-in-out infinite;
+            touch-action: manipulation;
+        }
+
+        .gift-box::before,
+        .gift-box::after {
+            content: '';
+            position: absolute;
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .gift-box::before {
+            width: 20%;
+            height: 100%;
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+        }
+
+        .gift-box::after {
+            width: 100%;
+            height: 22%;
+            top: 40%;
+            left: 0;
+        }
+
+        .gift-icon {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: clamp(60px, 10vw, 100px);
+            color: white;
+        }
+
+        .restart-btn {
+            border: none;
+            background: linear-gradient(135deg, #FFB6C1 0%, #FF69B4 100%);
+            color: #7c1c5c;
+            padding: 12px 26px;
+            border-radius: 999px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(255, 121, 198, 0.35);
+        }
+
+        @keyframes wobble {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+
+        .date-hint {
+            text-align: center;
+            font-size: 15px;
+            color: var(--purple);
+            margin-bottom: 16px;
+            padding: 10px;
+            background: rgba(255, 240, 245, 0.6);
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .big-btn {
+            border: none;
+            border-radius: 24px;
+            padding: 18px;
+            font-size: clamp(20px, 4vw, 28px);
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.12);
+            touch-action: manipulation;
+        }
+
+        .big-btn.green {
+            background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 100%);
+        }
+
+        .big-btn.blue {
+            background: linear-gradient(135deg, #B0E4FF 0%, #9AD0F5 100%);
+            color: #24557a;
+        }
+
+        .big-btn:active {
+            transform: scale(0.96);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .calendar {
+            display: grid;
+            gap: 14px;
+        }
+
+        .calendar-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--purple);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(32px, 1fr));
+            gap: 8px;
+            text-align: center;
+        }
+
+        .calendar-cell {
+            background: #FFF8FD;
+            border-radius: 16px;
+            padding: 8px 0;
+            min-height: 68px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 14px;
+            color: #a166c2;
+            border: 2px solid transparent;
+            box-shadow: inset 0 -3px 0 rgba(255, 105, 180, 0.08);
+        }
+
+        .calendar-cell.today {
+            border-color: var(--purple);
+            box-shadow: 0 8px 18px rgba(147, 112, 219, 0.25);
+        }
+
+        .calendar-cell.success {
+            background: radial-gradient(circle, #FFE2F4 0%, #FFC3EB 100%);
+            color: var(--pink);
+        }
+
+        .calendar-cell.fail {
+            background: radial-gradient(circle, #F3F0FF 0%, #DBCFF7 100%);
+            color: #6f4fa1;
+        }
+
+        .calendar-cell .emoji {
+            font-size: 24px;
+        }
+
+        .calendar-weekday {
+            font-size: 13px;
+            font-weight: 700;
+            color: #b48ac7;
+        }
+
+        .encourage-tip,
+        .modal {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.28);
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+            z-index: 40;
+        }
+
+        .encourage-tip.active,
+        .modal.active {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .tip-card,
+        .modal-card {
+            background: #FFF6E6;
+            border-radius: 24px;
+            padding: clamp(24px, 5vw, 36px);
+            text-align: center;
+            border: 4px solid #FFD6A0;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22);
+            font-size: 22px;
+            color: #FF7E54;
+            max-width: 320px;
+            animation: popIn 0.35s ease;
+        }
+
+        .modal-card {
+            max-width: 420px;
+        }
+
+        .modal-card h2 {
+            font-size: clamp(26px, 4vw, 34px);
+            color: #FF8A00;
+            margin-bottom: 16px;
+        }
+
+        .modal-card p {
+            font-size: clamp(18px, 4vw, 22px);
+            color: #C56D2C;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            border: none;
+            padding: 12px 26px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 100%);
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @media (max-width: 640px) {
+            .calendar-grid {
+                gap: 6px;
+            }
+            .calendar-cell {
+                padding: 6px 0;
+                min-height: 60px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+                padding-bottom: calc(12px + env(safe-area-inset-bottom));
+            }
+
+            .garden {
+                border-width: 4px;
+            }
+
+            .section {
+                margin-bottom: 20px;
+            }
+
+            .pits {
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="garden">
+        <div class="section">
+            <h1>🍊 桔子的勇气花园 🍊</h1>
+            <p class="subtitle">本周勇气挑战：收集 5 个桔子就能开启礼物盒！</p>
+        </div>
+
+        <section class="section">
+            <div class="section-card">
+                <div class="section-title">🌈 本周勇气值 · Weekly Challenge</div>
+                <div class="pits" id="pits"></div>
+                <div class="grand-prize" id="grandPrize">
+                    <div class="gift-box" id="giftBox">
+                        <div class="gift-icon">🎁</div>
+                    </div>
+                    <button class="restart-btn" id="restartBtn">清空历史记录 🍊</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-card actions">
+                <div class="section-title">💪 勇气按钮 · Mood Tracker</div>
+                <div class="date-hint" id="dateHint">📝 正在记录：今天</div>
+                <button class="big-btn green" id="braveBtn">😄 今天很勇敢！</button>
+                <button class="big-btn blue" id="encourageBtn">🥺 明天更努力</button>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-card">
+                <div class="section-title">📅 勇气日历 · Courage Calendar</div>
+                <div class="calendar">
+                    <div class="calendar-header" id="calendarMonth"></div>
+                    <div class="calendar-grid" id="calendarWeekdays"></div>
+                    <div class="calendar-grid" id="calendarGrid"></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="encourage-tip" id="tipOverlay">
+        <div class="tip-card">
+            爸爸爱你，抱一下！🫂<br>今天的小小泪水，明天会变勇敢。
+        </div>
+    </div>
+
+    <div class="modal" id="prizeModal">
+        <div class="modal-card">
+            <h2>🎉 恭喜桔子！</h2>
+            <p>你完成了本周挑战，勇气花园开出大奖啦！🎁💪</p>
+            <button class="modal-close" id="closeModal">太棒啦！</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script>
+        const STORAGE_KEY = 'juzi_records';
+        const MAX_COUNT = 5;
+        const WEEK_DAYS = ['日','一','二','三','四','五','六'];
+
+        const pitsEl = document.getElementById('pits');
+        const braveBtn = document.getElementById('braveBtn');
+        const encourageBtn = document.getElementById('encourageBtn');
+        const tipOverlay = document.getElementById('tipOverlay');
+        const grandPrize = document.getElementById('grandPrize');
+        const giftBox = document.getElementById('giftBox');
+        const restartBtn = document.getElementById('restartBtn');
+        const prizeModal = document.getElementById('prizeModal');
+        const closeModal = document.getElementById('closeModal');
+        const calendarMonthEl = document.getElementById('calendarMonth');
+        const calendarWeekdaysEl = document.getElementById('calendarWeekdays');
+        const calendarGridEl = document.getElementById('calendarGrid');
+        const dateHintEl = document.getElementById('dateHint');
+
+        // 当前选中的日期状态
+        let currentSelectedDate = null;
+
+        /* ---------- 日期 & 存储 ---------- */
+        function formatDate(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function getToday() {
+            return new Date();
+        }
+
+        function getStartOfWeek(date = new Date()) {
+            const day = date.getDay();
+            const diff = day === 0 ? -6 : 1 - day; // Monday as start, Sunday as last day
+            const monday = new Date(date);
+            monday.setHours(0, 0, 0, 0);
+            monday.setDate(date.getDate() + diff);
+            return monday;
+        }
+
+        function getWorkWeekDates(reference = new Date()) {
+            const monday = getStartOfWeek(reference);
+            return Array.from({ length: 5 }, (_, i) => {
+                const day = new Date(monday);
+                day.setDate(monday.getDate() + i);
+                return day;
+            });
+        }
+
+        function initSelectedDate() {
+            const today = getToday();
+            const dayOfWeek = today.getDay();
+            const weekDates = getWorkWeekDates();
+            
+            // 如果今天是周六或周日，默认选中本周五
+            if (dayOfWeek === 0 || dayOfWeek === 6) {
+                currentSelectedDate = weekDates[4]; // 周五
+            } else {
+                // 否则选中今天
+                const todayKey = formatDate(today);
+                const todayInWeek = weekDates.find(d => formatDate(d) === todayKey);
+                currentSelectedDate = todayInWeek || weekDates[0]; // 如果今天不在本周，选周一
+            }
+        }
+
+        function updateDateHint() {
+            // 如果 currentSelectedDate 为空，回退到今天
+            const targetDate = currentSelectedDate || getToday();
+            const weekdayLabels = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+            const dayOfWeek = targetDate.getDay();
+            const month = targetDate.getMonth() + 1;
+            const day = targetDate.getDate();
+            const label = weekdayLabels[dayOfWeek];
+            dateHintEl.textContent = `📝 正在记录：${label} (${month}月${day}日)`;
+        }
+
+        function loadRecords() {
+            try {
+                return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+            } catch {
+                return {};
+            }
+        }
+
+        function saveRecord(dateStr, status) {
+            const records = loadRecords();
+            records[dateStr] = status;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+        }
+
+        function deleteRecord(dateStr) {
+            const records = loadRecords();
+            delete records[dateStr];
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+            refreshUI();
+        }
+
+        function clearRecords() {
+            localStorage.removeItem(STORAGE_KEY);
+        }
+
+        /* ---------- 周挑战 ---------- */
+        function getWeekSuccessCount(records) {
+            return getWorkWeekDates().reduce((acc, date) => {
+                const key = formatDate(date);
+                return acc + (records[key] === 'success' ? 1 : 0);
+            }, 0);
+        }
+
+        function renderPits(records) {
+            const weekDates = getWorkWeekDates();
+            const todayKey = formatDate(getToday());
+            const weekdayLabels = ['周一', '周二', '周三', '周四', '周五'];
+
+            pitsEl.innerHTML = '';
+            const selectedKey = currentSelectedDate ? formatDate(currentSelectedDate) : null;
+            
+            weekDates.forEach((date, index) => {
+                const key = formatDate(date);
+                const status = records[key];
+                const pit = document.createElement('div');
+                pit.className = 'pit';
+                
+                // 如果是选中的日期，添加 selected 类
+                if (key === selectedKey) {
+                    pit.classList.add('selected');
+                }
+
+                const circle = document.createElement('div');
+                circle.className = 'pit-circle';
+                const label = document.createElement('div');
+                label.className = 'pit-label';
+                label.textContent = weekdayLabels[index];
+
+                if (status === 'success') {
+                    circle.textContent = '🍊';
+                    circle.classList.add('success');
+                } else if (status === 'fail') {
+                    circle.textContent = '😢';
+                    circle.classList.add('fail');
+                } else {
+                    circle.classList.add('empty');
+                    if (key === todayKey) {
+                        circle.classList.add('today');
+                    }
+                }
+
+                // 如果有记录，添加删除按钮
+                if (status === 'success' || status === 'fail') {
+                    const deleteBtn = document.createElement('span');
+                    deleteBtn.className = 'delete-btn';
+                    deleteBtn.textContent = '×';
+                    deleteBtn.addEventListener('click', (e) => {
+                        e.stopPropagation(); // 阻止冒泡，防止触发选中日期
+                        if (key === selectedKey) {
+                            vibrate(50); // 如果删除的是当前选中的日期，给震动反馈
+                        }
+                        deleteRecord(key);
+                    });
+                    pit.appendChild(deleteBtn);
+                }
+
+                // 添加点击事件
+                pit.addEventListener('click', () => {
+                    currentSelectedDate = new Date(date);
+                    refreshUI();
+                });
+
+                pit.appendChild(circle);
+                pit.appendChild(label);
+                pitsEl.appendChild(pit);
+            });
+        }
+
+        function checkGrandPrize(count) {
+            if (count >= MAX_COUNT) {
+                grandPrize.classList.add('active');
+            } else {
+                grandPrize.classList.remove('active');
+            }
+        }
+
+        /* ---------- 日历 ---------- */
+        function renderCalendar(records) {
+            const today = getToday();
+            const currentYear = today.getFullYear();
+            const currentMonth = today.getMonth(); // 0 index
+
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            const lastDay = new Date(currentYear, currentMonth + 1, 0);
+            const firstWeekday = firstDay.getDay();
+            const daysInMonth = lastDay.getDate();
+
+            calendarMonthEl.textContent = `${currentYear} 年 ${currentMonth + 1} 月`;
+
+            calendarWeekdaysEl.innerHTML = WEEK_DAYS.map(day => `
+                <div class="calendar-weekday">${day}</div>
+            `).join('');
+
+            calendarGridEl.innerHTML = '';
+
+            for (let i = 0; i < firstWeekday; i++) {
+                const cell = document.createElement('div');
+                calendarGridEl.appendChild(cell);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateObj = new Date(currentYear, currentMonth, day);
+                const key = formatDate(dateObj);
+                const status = records[key];
+                const cell = document.createElement('div');
+                cell.className = 'calendar-cell';
+
+                if (status === 'success') {
+                    cell.classList.add('success');
+                } else if (status === 'fail') {
+                    cell.classList.add('fail');
+                }
+
+                if (formatDate(today) === key) {
+                    cell.classList.add('today');
+                }
+
+                const emoji = document.createElement('div');
+                emoji.className = 'emoji';
+                emoji.textContent = status === 'success' ? '🍊' : status === 'fail' ? '🫂' : '';
+
+                const label = document.createElement('div');
+                label.textContent = day;
+
+                cell.appendChild(label);
+                cell.appendChild(emoji);
+                calendarGridEl.appendChild(cell);
+            }
+        }
+
+        /* ---------- 交互 ---------- */
+        function vibrate(pattern) {
+            if ('vibrate' in navigator) {
+                navigator.vibrate(pattern);
+            }
+        }
+
+        function triggerConfetti() {
+            if (typeof confetti !== 'function') return;
+            confetti({
+                particleCount: 160,
+                spread: 80,
+                origin: { y: 0.6 },
+                colors: ['#FF69B4', '#FFB6C1', '#9370DB', '#B39DDB']
+            });
+        }
+
+        function showTip() {
+            tipOverlay.classList.add('active');
+            setTimeout(() => tipOverlay.classList.remove('active'), 2200);
+        }
+
+        function openPrizeModal() {
+            prizeModal.classList.add('active');
+        }
+
+        function closePrizeModal() {
+            prizeModal.classList.remove('active');
+        }
+
+        function handleBrave() {
+            if (!currentSelectedDate) return;
+            const selectedStr = formatDate(currentSelectedDate);
+            saveRecord(selectedStr, 'success');
+            triggerConfetti();
+            refreshUI();
+            const records = loadRecords();
+            if (getWeekSuccessCount(records) >= MAX_COUNT) {
+                openPrizeModal();
+            }
+        }
+
+        function handleEncourage() {
+            if (!currentSelectedDate) return;
+            const selectedStr = formatDate(currentSelectedDate);
+            saveRecord(selectedStr, 'fail');
+            showTip();
+            refreshUI();
+        }
+
+        function handleRestart() {
+            if (confirm('确定要清空所有历史记录吗？')) {
+                clearRecords();
+                refreshUI();
+            }
+        }
+
+        tipOverlay.addEventListener('click', () => tipOverlay.classList.remove('active'));
+        braveBtn.addEventListener('click', (e) => {
+            vibrate(200);
+            handleBrave(e);
+        });
+        encourageBtn.addEventListener('click', (e) => {
+            vibrate([50, 50, 50]);
+            handleEncourage(e);
+        });
+        restartBtn.addEventListener('click', handleRestart);
+        giftBox.addEventListener('click', () => {
+            vibrate(400);
+            triggerConfetti();
+            openPrizeModal();
+        });
+        closeModal.addEventListener('click', closePrizeModal);
+        prizeModal.addEventListener('click', (e) => {
+            if (e.target === prizeModal) closePrizeModal();
+        });
+
+        function refreshUI() {
+            const records = loadRecords();
+            const count = getWeekSuccessCount(records);
+            renderPits(records);
+            checkGrandPrize(count);
+            renderCalendar(records);
+            updateDateHint();
+        }
+
+        // 初始化
+        initSelectedDate();
+        refreshUI();
+    </script>
+</body>
+</html>
