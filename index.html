@@ -708,6 +708,25 @@
             }, 0);
         }
 
+        function checkWeekStatus(records) {
+            const weekDates = getWorkWeekDates();
+            let totalFilled = 0;
+            let successCount = 0;
+            
+            weekDates.forEach(date => {
+                const key = formatDate(date);
+                const status = records[key];
+                if (status === 'success' || status === 'fail') {
+                    totalFilled++;
+                }
+                if (status === 'success') {
+                    successCount++;
+                }
+            });
+            
+            return { totalFilled, successCount };
+        }
+
         function renderPits(records) {
             const weekDates = getWorkWeekDates();
             const todayKey = formatDate(getToday());
@@ -773,11 +792,37 @@
             });
         }
 
-        function checkGrandPrize(count) {
-            if (count >= MAX_COUNT) {
-                grandPrize.classList.add('active');
-            } else {
+        function renderWeekSettlement(records) {
+            const { totalFilled, successCount } = checkWeekStatus(records);
+            const giftBox = document.getElementById('giftBox');
+            const restartBtn = document.getElementById('restartBtn');
+            
+            // 场景 C：未完成，隐藏结算区域
+            if (totalFilled < 5) {
                 grandPrize.classList.remove('active');
+                // 重置按钮样式（虽然隐藏了，但确保下次显示时样式正确）
+                giftBox.style.display = 'block';
+                restartBtn.style.background = 'linear-gradient(135deg, #FFB6C1 0%, #FF69B4 100%)';
+                restartBtn.style.color = '#7c1c5c';
+                return;
+            }
+            
+            // 显示结算区域
+            grandPrize.classList.add('active');
+            
+            // 场景 A：全勤完美
+            if (successCount === 5) {
+                giftBox.style.display = 'block';
+                restartBtn.textContent = '你很棒，下周继续努力 💪';
+                restartBtn.style.background = 'linear-gradient(135deg, #FFB6C1 0%, #FF69B4 100%)';
+                restartBtn.style.color = '#7c1c5c';
+            } 
+            // 场景 B：有遗憾
+            else {
+                giftBox.style.display = 'none';
+                restartBtn.textContent = '很遗憾，下周再继续努力 🥺';
+                restartBtn.style.background = '#d1d5db';
+                restartBtn.style.color = '#555';
             }
         }
 
@@ -886,9 +931,21 @@
         }
 
         function handleRestart() {
-            if (confirm('确定要清空所有历史记录吗？')) {
-                clearRecords();
-                refreshUI();
+            const records = loadRecords();
+            const { totalFilled, successCount } = checkWeekStatus(records);
+            
+            // 如果本周未完成，不显示结算
+            if (totalFilled < 5) {
+                return;
+            }
+            
+            // 显示结算提示
+            let message = '本周挑战已结束！你的战绩已安全保存到日历中 📅。下周一花园会自动开启新的挑战，要加油哦！';
+            alert(message);
+            
+            // 场景 A：全勤完美，触发撒花
+            if (successCount === 5) {
+                triggerConfetti();
             }
         }
 
@@ -914,9 +971,8 @@
 
         function refreshUI() {
             const records = loadRecords();
-            const count = getWeekSuccessCount(records);
             renderPits(records);
-            checkGrandPrize(count);
+            renderWeekSettlement(records);
             renderCalendar(records);
             updateDateHint();
         }
