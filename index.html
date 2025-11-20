@@ -49,7 +49,7 @@
         }
 
         .header-compact {
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         h1 {
@@ -63,7 +63,7 @@
         .subtitle {
             font-size: clamp(14px, 2.5vw, 16px);
             color: #a14f7f;
-            margin-bottom: 16px;
+            margin-bottom: 10px;
         }
 
         .dashboard-card {
@@ -76,18 +76,18 @@
         }
 
         .week-progress {
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .section-title.small {
             font-size: clamp(14px, 2.5vw, 16px);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .divider {
             height: 1px;
             background: rgba(255, 105, 180, 0.15);
-            margin: 12px 0;
+            margin: 10px 0;
         }
 
         .action-area {
@@ -136,10 +136,11 @@
 
         .pits.small-pits {
             display: flex;
-            justify-content: space-between;
-            gap: clamp(4px, 1.5vw, 8px);
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: clamp(8px, 2vw, 12px);
             margin: 8px auto 12px;
-            padding: 0 4px;
+            padding: 0;
         }
 
         .pit {
@@ -163,10 +164,10 @@
 
         .delete-btn {
             position: absolute;
-            top: -10px;
-            right: -10px;
-            width: 32px;
-            height: 32px;
+            top: -6px;
+            right: -6px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.9);
             color: #AAAAAA;
@@ -174,7 +175,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 14px;
             font-weight: bold;
             cursor: pointer;
             z-index: 10;
@@ -207,17 +208,18 @@
         }
 
         .small-pits .pit-circle {
-            width: clamp(40px, 10vw, 50px);
-            font-size: clamp(18px, 4vw, 24px);
-            border-width: 2px;
+            width: 64px;
+            height: 64px;
+            font-size: 28px;
+            border-width: 3px;
         }
 
         .small-pits .pit-label {
-            font-size: clamp(10px, 2vw, 12px);
+            font-size: 12px;
         }
 
         .small-pits .pit {
-            gap: 6px;
+            gap: 4px;
         }
 
         .pit-label {
@@ -385,9 +387,13 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--purple);
+            font-size: 16px;
+            font-weight: 600;
+            color: #a166c2;
+            background: #FFF0F5;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-bottom: 12px;
         }
 
         .calendar-grid {
