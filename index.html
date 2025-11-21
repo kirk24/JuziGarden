@@ -127,10 +127,9 @@
         .progress-bar-container {
             position: relative;
             width: 100%;
-            height: 32px;
+            height: 36px;
             background: rgba(255, 105, 180, 0.15);
-            border-radius: 16px;
-            overflow: hidden;
+            border-radius: 18px;
         }
 
         .progress-bar {
@@ -142,19 +141,34 @@
         .progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #FF69B4 0%, #9370DB 100%);
-            border-radius: 16px;
+            border-radius: 18px;
             transition: width 0.5s ease;
             width: 0%;
+            overflow: hidden;
         }
 
         .progress-marker {
             position: absolute;
-            right: 0;
+            right: -8px;
             top: 50%;
-            transform: translateY(-50%);
-            font-size: 24px;
+            width: 36px;
+            height: 36px;
+            font-size: 28px;
             opacity: 0.6;
-            z-index: 2;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: gift-box-wobble 2s ease-in-out infinite;
+        }
+
+        @keyframes gift-box-wobble {
+            0%, 100% {
+                transform: translateY(-50%) rotate(-3deg) scale(1);
+            }
+            50% {
+                transform: translateY(-50%) rotate(3deg) scale(1.1);
+            }
         }
 
         .section-title.small {
@@ -558,8 +572,7 @@
         .calendar-cell {
             background: #FFF8FD;
             border-radius: 12px;
-            padding: 4px;
-            min-height: clamp(56px, 8vw, 64px);
+            padding: 2px;
             aspect-ratio: 1/1;
             position: relative;
             font-size: 12px;
@@ -823,25 +836,24 @@
 
         @media (max-width: 640px) {
             .calendar-grid {
-                gap: 6px;
+                gap: 4px;
             }
             .calendar-cell {
-                padding: 3px;
-                min-height: clamp(52px, 7vw, 60px);
+                padding: 2px;
             }
             .calendar-date-label {
-                font-size: 10px;
-                top: 3px;
-                left: 4px;
+                font-size: 9px;
+                top: 2px;
+                left: 3px;
             }
             .calendar-icon,
             .calendar-prize {
                 font-size: 20px;
             }
             .calendar-score {
-                font-size: 9px;
+                font-size: 8px;
                 bottom: 1px;
-                right: 3px;
+                right: 2px;
             }
         }
 
