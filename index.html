@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#FFF0F5">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍊</text></svg>">
     <title>桔子的勇气花园 · 周挑战</title>
     <style>
         :root {
@@ -25,7 +27,7 @@
         }
 
         body {
-            font-family: 'Fredoka', 'PingFang SC', 'Comic Sans MS', 'Microsoft YaHei', sans-serif;
+            font-family: 'Fredoka', 'Roboto', 'Noto Sans SC', 'PingFang SC', 'Comic Sans MS', 'Microsoft YaHei', sans-serif;
             background: var(--lavender-blush);
             min-height: 100dvh;
             display: flex;
@@ -34,6 +36,7 @@
             padding: 10px;
             color: var(--indigo);
             padding-bottom: calc(10px + env(safe-area-inset-bottom));
+            overscroll-behavior-y: none;
         }
 
         .garden {
@@ -317,37 +320,6 @@
             border-width: 4px;
         }
 
-        .delete-btn {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.9);
-            color: #AAAAAA;
-            border: 1px solid #E0E0E0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 10;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease;
-            line-height: 1;
-        }
-
-        .delete-btn:hover {
-            background: #F0F0F0;
-            color: #888888;
-            transform: scale(1.1);
-        }
-
-        .delete-btn:active {
-            transform: scale(0.95);
-        }
 
         .pit-circle {
             width: clamp(70px, 12vw, 110px);
@@ -587,11 +559,8 @@
             background: #FFF8FD;
             border-radius: 12px;
             padding: 4px;
+            min-height: clamp(56px, 8vw, 64px);
             aspect-ratio: 1/1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             position: relative;
             font-size: 12px;
             color: #a166c2;
@@ -599,13 +568,13 @@
             box-shadow: inset 0 -3px 0 rgba(255, 105, 180, 0.08);
         }
 
-        .calendar-cell .calendar-day-label {
+        .calendar-date-label {
             position: absolute;
             top: 4px;
             left: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #a166c2;
+            font-size: 11px;
+            font-weight: normal;
+            color: #B0B0B0;
             line-height: 1;
         }
 
@@ -629,21 +598,17 @@
             line-height: 1;
         }
 
-        .calendar-score {
-            display: none;
-        }
-
-        .calendar-emoji {
+        .calendar-icon {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            font-size: 24px;
+            line-height: 1;
+            margin-top: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-direction: row;
-            gap: 2px;
-            line-height: 1;
         }
 
         .calendar-prize {
@@ -651,24 +616,22 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: clamp(24px, 5vw, 28px);
+            font-size: 24px;
             line-height: 1;
+            margin-top: 4px;
         }
 
-        .cal-icon {
-            font-size: clamp(24px, 5vw, 28px);
-            line-height: 1;
-            display: inline-block;
-        }
-
-        .cal-count {
-            font-size: 11px;
-            font-weight: 700;
-            color: #d63384;
-            line-height: 1;
-            display: inline-block;
-            align-self: flex-end;
-            margin-bottom: 2px;
+        .calendar-score {
+            position: absolute;
+            bottom: 2px;
+            right: 4px;
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--pink);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 0 2px;
+            border-radius: 4px;
+            line-height: 1.2;
         }
 
 
@@ -864,15 +827,21 @@
             }
             .calendar-cell {
                 padding: 3px;
+                min-height: clamp(52px, 7vw, 60px);
             }
-            .calendar-day-label {
-                font-size: 11px;
+            .calendar-date-label {
+                font-size: 10px;
                 top: 3px;
                 left: 4px;
             }
-            .calendar-emoji,
+            .calendar-icon,
             .calendar-prize {
-                font-size: clamp(20px, 4vw, 24px);
+                font-size: 20px;
+            }
+            .calendar-score {
+                font-size: 9px;
+                bottom: 1px;
+                right: 3px;
             }
         }
 
@@ -1200,9 +1169,10 @@
                 }
 
                 // 日期标签（左上角）
-                const label = document.createElement('div');
-                label.className = 'calendar-day-label';
-                label.textContent = day;
+                const dateLabel = document.createElement('span');
+                dateLabel.className = 'calendar-date-label';
+                dateLabel.textContent = day;
+                cell.appendChild(dateLabel);
 
                 // 单一图标原则：优先级 礼物 > 哭脸 > 橘子
                 let iconEmoji = '';
@@ -1227,23 +1197,18 @@
 
                 // 创建图标元素（居中显示）
                 if (iconEmoji) {
-                    const iconContainer = document.createElement('div');
-                    iconContainer.className = record && record.hasPrize ? 'calendar-prize' : 'calendar-emoji';
-                    
-                    const iconEl = document.createElement('span');
-                    iconEl.className = 'cal-icon';
+                    const iconEl = document.createElement('div');
+                    iconEl.className = record && record.hasPrize ? 'calendar-prize' : 'calendar-icon';
                     iconEl.textContent = iconEmoji;
-                    iconContainer.appendChild(iconEl);
-                    
-                    // 如果score > 1，显示数量
-                    if (showCount) {
-                        const countEl = document.createElement('span');
-                        countEl.className = 'cal-count';
-                        countEl.textContent = `+${countValue}`;
-                        iconContainer.appendChild(countEl);
-                    }
-                    
-                    cell.appendChild(iconContainer);
+                    cell.appendChild(iconEl);
+                }
+
+                // 如果score > 1，显示数量标签（右下角）
+                if (showCount) {
+                    const scoreEl = document.createElement('div');
+                    scoreEl.className = 'calendar-score';
+                    scoreEl.textContent = `+${countValue}`;
+                    cell.appendChild(scoreEl);
                 }
 
                 // 添加点击事件选择日期
@@ -1260,7 +1225,6 @@
                     cell.style.boxShadow = '0 0 0 2px rgba(255, 105, 180, 0.3)';
                 }
 
-                cell.appendChild(label);
                 calendarGridEl.appendChild(cell);
             }
         }
