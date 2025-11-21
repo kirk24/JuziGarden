@@ -538,12 +538,18 @@
         }
 
         .month-nav-btn {
-            background: transparent;
+            background: white;
             border: none;
             color: var(--purple);
             font-size: 18px;
-            padding: 0 16px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            padding: 0;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: transform 0.2s ease, opacity 0.2s ease;
             touch-action: manipulation;
         }
@@ -570,15 +576,21 @@
         }
 
         .calendar-cell {
-            background: #FFF8FD;
-            border-radius: 12px;
+            background: #FFFAFA;
+            border-radius: 14px;
             padding: 2px;
             aspect-ratio: 1/1;
             position: relative;
             font-size: 12px;
             color: #a166c2;
             border: 2px solid transparent;
-            box-shadow: inset 0 -3px 0 rgba(255, 105, 180, 0.08);
+            box-shadow: 0 2px 6px rgba(255, 105, 180, 0.08);
+        }
+
+        .calendar-cell.selected {
+            border: 2px solid var(--pink);
+            background: #FFF0F5;
+            box-shadow: 0 4px 12px rgba(255, 105, 180, 0.3);
         }
 
         .calendar-date-label {
@@ -587,7 +599,8 @@
             left: 6px;
             font-size: 11px;
             font-weight: normal;
-            color: #B0B0B0;
+            color: #CCCCCC;
+            font-family: 'Roboto', sans-serif;
             line-height: 1;
         }
 
@@ -636,15 +649,16 @@
 
         .calendar-score {
             position: absolute;
-            bottom: 2px;
-            right: 4px;
+            bottom: -2px;
+            right: -2px;
             font-size: 10px;
             font-weight: 800;
-            color: var(--pink);
-            background: rgba(255, 255, 255, 0.8);
-            padding: 0 2px;
-            border-radius: 4px;
+            color: #FFF;
+            background: var(--pink);
+            padding: 1px 4px;
+            border-radius: 6px;
             line-height: 1.2;
+            box-shadow: 0 0 0 2px #FFF;
         }
 
 
@@ -1233,8 +1247,7 @@
                 // 如果是选中的日期，添加高亮
                 const selectedKey = currentSelectedDate ? formatDate(currentSelectedDate) : null;
                 if (key === selectedKey) {
-                    cell.style.border = '2px solid var(--pink)';
-                    cell.style.boxShadow = '0 0 0 2px rgba(255, 105, 180, 0.3)';
+                    cell.classList.add('selected');
                 }
 
                 calendarGridEl.appendChild(cell);
