@@ -63,7 +63,38 @@
         .subtitle {
             font-size: clamp(14px, 2.5vw, 16px);
             color: #a14f7f;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+        }
+
+        .stats-header {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 16px;
+            padding: 10px 0;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-icon {
+            font-size: 20px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #a14f7f;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            color: var(--pink);
+            font-weight: 700;
         }
 
         .dashboard-card {
@@ -75,8 +106,49 @@
             margin-bottom: 16px;
         }
 
-        .week-progress {
+        .progress-section {
             margin-bottom: 8px;
+        }
+
+        .progress-hint {
+            text-align: center;
+            font-size: clamp(14px, 2.5vw, 16px);
+            color: var(--purple);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .progress-bar-container {
+            position: relative;
+            width: 100%;
+            height: 32px;
+            background: rgba(255, 105, 180, 0.15);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FF69B4 0%, #9370DB 100%);
+            border-radius: 16px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .progress-marker {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            opacity: 0.6;
+            z-index: 2;
         }
 
         .section-title.small {
@@ -100,6 +172,85 @@
             display: flex;
             gap: 10px;
             width: 100%;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            width: 100%;
+        }
+
+        .action-btn {
+            border: none;
+            border-radius: 16px;
+            padding: 14px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            touch-action: manipulation;
+            position: relative;
+        }
+
+        .action-btn:active {
+            transform: scale(0.9);
+        }
+
+        .btn-excellent {
+            animation: pulse-gold 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-gold {
+            0%, 100% {
+                box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+            }
+            50% {
+                box-shadow: 0 8px 24px rgba(255, 215, 0, 0.6), 0 0 0 4px rgba(255, 215, 0, 0.2);
+            }
+        }
+
+        .btn-emoji {
+            font-size: 28px;
+        }
+
+        .btn-text {
+            font-size: clamp(13px, 2.5vw, 15px);
+            font-weight: 600;
+            color: white;
+        }
+
+        .btn-score {
+            font-size: 12px;
+            font-weight: 700;
+            opacity: 0.9;
+        }
+
+        .btn-kindergarten {
+            background: linear-gradient(135deg, #FF69B4 0%, #FF8EC7 100%);
+        }
+
+        .btn-interest {
+            background: linear-gradient(135deg, #9370DB 0%, #B19CD9 100%);
+        }
+
+        .btn-excellent {
+            background: linear-gradient(135deg, #FFA500 0%, #FFD700 100%);
+        }
+
+        .btn-hug {
+            background: linear-gradient(135deg, #B0E4FF 0%, #9AD0F5 100%);
+        }
+
+        .btn-hug .btn-text {
+            color: #24557a;
+        }
+
+        .btn-hug .btn-score {
+            color: #24557a;
         }
 
         .section {
@@ -435,13 +586,69 @@
         }
 
         .calendar-cell .emoji {
-            font-size: 24px;
+            font-size: 32px;
+            line-height: 1;
+        }
+
+        .calendar-score {
+            display: none;
+        }
+
+        .calendar-emoji {
+            font-size: 32px;
+            line-height: 1;
+            margin-top: 4px;
+        }
+
+        .calendar-prize {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            font-size: 16px;
+        }
+
+        .calendar-cell {
+            position: relative;
         }
 
         .calendar-weekday {
             font-size: 13px;
             font-weight: 700;
             color: #b48ac7;
+        }
+
+        .floating-feedback {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: clamp(80px, 20vw, 120px);
+            z-index: 50;
+            pointer-events: none;
+            visibility: hidden;
+            opacity: 0;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .floating-feedback.active {
+            visibility: visible;
+            animation: popUpFade 0.8s ease-out;
+        }
+
+        @keyframes popUpFade {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.3);
+            }
+            30% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
         }
 
         .encourage-tip,
@@ -543,18 +750,29 @@
     <div class="garden">
         <div class="header-compact">
             <h1>🍊 桔子的勇气花园 🍊</h1>
-            <p class="subtitle">收集 5 个桔子召唤礼物！</p>
+            <p class="subtitle">攒满 7 个桔子获得礼物！</p>
+            <div class="stats-header">
+                <div class="stat-item">
+                    <span class="stat-icon">🍊</span>
+                    <span class="stat-label">累计桔子</span>
+                    <span class="stat-value" id="totalOranges">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">🎁</span>
+                    <span class="stat-label">累计奖励</span>
+                    <span class="stat-value" id="totalPrizes">0</span>
+                </div>
+            </div>
         </div>
 
         <div class="dashboard-card">
-            <div class="week-progress">
-                <div class="section-title small">🌈 本周进度</div>
-                <div class="pits small-pits" id="pits"></div>
-                <div class="grand-prize" id="grandPrize">
-                    <div class="gift-box" id="giftBox">
-                        <div class="gift-icon">🎁</div>
+            <div class="progress-section">
+                <div class="progress-hint" id="progressHint">距离礼物还有 7 个桔子</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill"></div>
+                        <div class="progress-marker">🎁</div>
                     </div>
-                    <button class="restart-btn" id="restartBtn">清空历史记录 🍊</button>
                 </div>
             </div>
 
@@ -562,9 +780,27 @@
 
             <div class="action-area">
                 <div class="date-hint" id="dateHint">📝 正在记录：今天</div>
-                <div class="btn-group">
-                    <button class="big-btn green" id="braveBtn">😄 勇敢</button>
-                    <button class="big-btn blue" id="encourageBtn">🥺 加油</button>
+                <div class="action-buttons" id="actionButtons">
+                    <button class="action-btn btn-kindergarten" data-score="1">
+                        <span class="btn-emoji">🏫</span>
+                        <span class="btn-text">幼儿园</span>
+                        <span class="btn-score">+1</span>
+                    </button>
+                    <button class="action-btn btn-interest" data-score="1">
+                        <span class="btn-emoji">🎨</span>
+                        <span class="btn-text">兴趣课</span>
+                        <span class="btn-score">+1</span>
+                    </button>
+                    <button class="action-btn btn-excellent" data-score="2">
+                        <span class="btn-emoji">🌟</span>
+                        <span class="btn-text">兴趣课超棒</span>
+                        <span class="btn-score">+2</span>
+                    </button>
+                    <button class="action-btn btn-hug" data-score="-1">
+                        <span class="btn-emoji">🫂</span>
+                        <span class="btn-text">需要抱抱</span>
+                        <span class="btn-score">-1</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -581,6 +817,8 @@
         </section>
     </div>
 
+    <div class="floating-feedback" id="floatingFeedback"></div>
+
     <div class="encourage-tip" id="tipOverlay">
         <div class="tip-card">
             爸爸爱你，抱一下！🫂<br>今天的小小泪水，明天会变勇敢。
@@ -590,24 +828,23 @@
     <div class="modal" id="prizeModal">
         <div class="modal-card">
             <h2>🎉 恭喜桔子！</h2>
-            <p>你完成了本周挑战，勇气花园开出大奖啦！🎁💪</p>
+            <p>你攒满了 7 个桔子，获得礼物啦！🎁💪</p>
             <button class="modal-close" id="closeModal">太棒啦！</button>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <script>
-        const STORAGE_KEY = 'juzi_records';
-        const MAX_COUNT = 5;
+        const STORAGE_KEY = 'juzi_game_data';
+        const MAX_PROGRESS = 7;
         const WEEK_DAYS = ['日','一','二','三','四','五','六'];
 
-        const pitsEl = document.getElementById('pits');
-        const braveBtn = document.getElementById('braveBtn');
-        const encourageBtn = document.getElementById('encourageBtn');
+        const progressHintEl = document.getElementById('progressHint');
+        const progressFillEl = document.getElementById('progressFill');
+        const totalOrangesEl = document.getElementById('totalOranges');
+        const totalPrizesEl = document.getElementById('totalPrizes');
+        const actionButtonsEl = document.getElementById('actionButtons');
         const tipOverlay = document.getElementById('tipOverlay');
-        const grandPrize = document.getElementById('grandPrize');
-        const giftBox = document.getElementById('giftBox');
-        const restartBtn = document.getElementById('restartBtn');
         const prizeModal = document.getElementById('prizeModal');
         const closeModal = document.getElementById('closeModal');
         const calendarMonthEl = document.getElementById('calendarMonth');
@@ -649,19 +886,7 @@
         }
 
         function initSelectedDate() {
-            const today = getToday();
-            const dayOfWeek = today.getDay();
-            const weekDates = getWorkWeekDates();
-            
-            // 如果今天是周六或周日，默认选中本周五
-            if (dayOfWeek === 0 || dayOfWeek === 6) {
-                currentSelectedDate = weekDates[4]; // 周五
-            } else {
-                // 否则选中今天
-                const todayKey = formatDate(today);
-                const todayInWeek = weekDates.find(d => formatDate(d) === todayKey);
-                currentSelectedDate = todayInWeek || weekDates[0]; // 如果今天不在本周，选周一
-            }
+            currentSelectedDate = getToday();
         }
 
         function updateDateHint() {
@@ -675,159 +900,84 @@
             dateHintEl.textContent = `📝 正在记录：${label} (${month}月${day}日)`;
         }
 
-        function loadRecords() {
+        function loadGameData() {
             try {
-                return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+                const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+                if (!data) {
+                    return {
+                        currentProgress: 0,
+                        totalOranges: 0,
+                        totalPrizes: 0,
+                        history: {}
+                    };
+                }
+                // 确保数据结构完整
+                return {
+                    currentProgress: data.currentProgress || 0,
+                    totalOranges: data.totalOranges || 0,
+                    totalPrizes: data.totalPrizes || 0,
+                    history: data.history || {}
+                };
             } catch {
-                return {};
+                return {
+                    currentProgress: 0,
+                    totalOranges: 0,
+                    totalPrizes: 0,
+                    history: {}
+                };
             }
         }
 
-        function saveRecord(dateStr, status) {
-            const records = loadRecords();
-            records[dateStr] = status;
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+        function saveGameData(data) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
         }
 
-        function deleteRecord(dateStr) {
-            const records = loadRecords();
-            delete records[dateStr];
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+        /* ---------- 游戏逻辑 ---------- */
+        function updateProgress(score) {
+            const data = loadGameData();
+            const dateStr = formatDate(currentSelectedDate || getToday());
+            
+            // 更新进度
+            data.currentProgress += score;
+            if (data.currentProgress < 0) data.currentProgress = 0;
+            if (data.currentProgress > MAX_PROGRESS) data.currentProgress = MAX_PROGRESS;
+            
+            // 更新累计桔子
+            data.totalOranges += score;
+            
+            // 更新历史记录
+            if (!data.history[dateStr]) {
+                data.history[dateStr] = { score: 0, hasPrize: false };
+            }
+            data.history[dateStr].score += score;
+            
+            // 检查是否达到奖励
+            if (data.currentProgress >= MAX_PROGRESS) {
+                data.totalPrizes += 1;
+                data.currentProgress = 0;
+                data.history[dateStr].hasPrize = true;
+                triggerConfetti();
+                openPrizeModal();
+            }
+            
+            saveGameData(data);
             refreshUI();
         }
 
-        function clearRecords() {
-            localStorage.removeItem(STORAGE_KEY);
-        }
-
-        /* ---------- 周挑战 ---------- */
-        function getWeekSuccessCount(records) {
-            return getWorkWeekDates().reduce((acc, date) => {
-                const key = formatDate(date);
-                return acc + (records[key] === 'success' ? 1 : 0);
-            }, 0);
-        }
-
-        function checkWeekStatus(records) {
-            const weekDates = getWorkWeekDates();
-            let totalFilled = 0;
-            let successCount = 0;
+        function renderProgress(data) {
+            const progress = data.currentProgress;
+            const percentage = (progress / MAX_PROGRESS) * 100;
+            const remaining = MAX_PROGRESS - progress;
             
-            weekDates.forEach(date => {
-                const key = formatDate(date);
-                const status = records[key];
-                if (status === 'success' || status === 'fail') {
-                    totalFilled++;
-                }
-                if (status === 'success') {
-                    successCount++;
-                }
-            });
+            progressFillEl.style.width = `${percentage}%`;
+            progressHintEl.textContent = `距离礼物还有 ${remaining} 个桔子`;
             
-            return { totalFilled, successCount };
-        }
-
-        function renderPits(records) {
-            const weekDates = getWorkWeekDates();
-            const todayKey = formatDate(getToday());
-            const weekdayLabels = ['周一', '周二', '周三', '周四', '周五'];
-
-            pitsEl.innerHTML = '';
-            const selectedKey = currentSelectedDate ? formatDate(currentSelectedDate) : null;
-            
-            weekDates.forEach((date, index) => {
-                const key = formatDate(date);
-                const status = records[key];
-                const pit = document.createElement('div');
-                pit.className = 'pit';
-                
-                // 如果是选中的日期，添加 selected 类
-                if (key === selectedKey) {
-                    pit.classList.add('selected');
-                }
-
-                const circle = document.createElement('div');
-                circle.className = 'pit-circle';
-                const label = document.createElement('div');
-                label.className = 'pit-label';
-                label.textContent = weekdayLabels[index];
-
-                if (status === 'success') {
-                    circle.textContent = '🍊';
-                    circle.classList.add('success');
-                } else if (status === 'fail') {
-                    circle.textContent = '😢';
-                    circle.classList.add('fail');
-                } else {
-                    circle.classList.add('empty');
-                    if (key === todayKey) {
-                        circle.classList.add('today');
-                    }
-                }
-
-                // 如果有记录，添加删除按钮
-                if (status === 'success' || status === 'fail') {
-                    const deleteBtn = document.createElement('span');
-                    deleteBtn.className = 'delete-btn';
-                    deleteBtn.textContent = '×';
-                    deleteBtn.addEventListener('click', (e) => {
-                        e.stopPropagation(); // 阻止冒泡，防止触发选中日期
-                        if (key === selectedKey) {
-                            vibrate(50); // 如果删除的是当前选中的日期，给震动反馈
-                        }
-                        deleteRecord(key);
-                    });
-                    pit.appendChild(deleteBtn);
-                }
-
-                // 添加点击事件
-                pit.addEventListener('click', () => {
-                    currentSelectedDate = new Date(date);
-                    refreshUI();
-                });
-
-                pit.appendChild(circle);
-                pit.appendChild(label);
-                pitsEl.appendChild(pit);
-            });
-        }
-
-        function renderWeekSettlement(records) {
-            const { totalFilled, successCount } = checkWeekStatus(records);
-            const giftBox = document.getElementById('giftBox');
-            const restartBtn = document.getElementById('restartBtn');
-            
-            // 场景 C：未完成，隐藏结算区域
-            if (totalFilled < 5) {
-                grandPrize.classList.remove('active');
-                // 重置按钮样式（虽然隐藏了，但确保下次显示时样式正确）
-                giftBox.style.display = 'block';
-                restartBtn.style.background = 'linear-gradient(135deg, #FFB6C1 0%, #FF69B4 100%)';
-                restartBtn.style.color = '#7c1c5c';
-                return;
-            }
-            
-            // 显示结算区域
-            grandPrize.classList.add('active');
-            
-            // 场景 A：全勤完美
-            if (successCount === 5) {
-                giftBox.style.display = 'block';
-                restartBtn.textContent = '你很棒，下周继续努力 💪';
-                restartBtn.style.background = 'linear-gradient(135deg, #FFB6C1 0%, #FF69B4 100%)';
-                restartBtn.style.color = '#7c1c5c';
-            } 
-            // 场景 B：有遗憾
-            else {
-                giftBox.style.display = 'none';
-                restartBtn.textContent = '很遗憾，下周再继续努力 🥺';
-                restartBtn.style.background = '#d1d5db';
-                restartBtn.style.color = '#555';
-            }
+            totalOrangesEl.textContent = data.totalOranges;
+            totalPrizesEl.textContent = data.totalPrizes;
         }
 
         /* ---------- 日历 ---------- */
-        function renderCalendar(records) {
+        function renderCalendar(data) {
             const today = getToday();
             const currentYear = today.getFullYear();
             const currentMonth = today.getMonth(); // 0 index
@@ -853,13 +1003,14 @@
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateObj = new Date(currentYear, currentMonth, day);
                 const key = formatDate(dateObj);
-                const status = records[key];
+                const record = data.history[key];
                 const cell = document.createElement('div');
                 cell.className = 'calendar-cell';
 
-                if (status === 'success') {
+                const score = record ? record.score : 0;
+                if (score > 0) {
                     cell.classList.add('success');
-                } else if (status === 'fail') {
+                } else if (score < 0) {
                     cell.classList.add('fail');
                 }
 
@@ -867,15 +1018,49 @@
                     cell.classList.add('today');
                 }
 
-                const emoji = document.createElement('div');
-                emoji.className = 'emoji';
-                emoji.textContent = status === 'success' ? '🍊' : status === 'fail' ? '🫂' : '';
-
                 const label = document.createElement('div');
                 label.textContent = day;
 
+                // 显示emoji而不是数字
+                const emojiLabel = document.createElement('div');
+                emojiLabel.className = 'calendar-emoji';
+                if (score > 0) {
+                    if (score >= 2) {
+                        emojiLabel.textContent = '✨🍊';
+                    } else {
+                        emojiLabel.textContent = '🍊';
+                    }
+                } else if (score < 0) {
+                    emojiLabel.textContent = '😢';
+                } else {
+                    emojiLabel.textContent = '';
+                }
+
+                if (record && record.hasPrize) {
+                    const prizeIcon = document.createElement('div');
+                    prizeIcon.className = 'calendar-prize';
+                    prizeIcon.textContent = '🎁';
+                    cell.appendChild(prizeIcon);
+                }
+
+                // 添加点击事件选择日期
+                cell.style.cursor = 'pointer';
+                cell.addEventListener('click', () => {
+                    currentSelectedDate = dateObj;
+                    refreshUI();
+                });
+
+                // 如果是选中的日期，添加高亮
+                const selectedKey = currentSelectedDate ? formatDate(currentSelectedDate) : null;
+                if (key === selectedKey) {
+                    cell.style.border = '2px solid var(--pink)';
+                    cell.style.boxShadow = '0 0 0 2px rgba(255, 105, 180, 0.3)';
+                }
+
                 cell.appendChild(label);
-                cell.appendChild(emoji);
+                if (emojiLabel.textContent) {
+                    cell.appendChild(emojiLabel);
+                }
                 calendarGridEl.appendChild(cell);
             }
         }
@@ -887,14 +1072,24 @@
             }
         }
 
-        function triggerConfetti() {
+        function triggerConfetti(options = {}) {
             if (typeof confetti !== 'function') return;
-            confetti({
+            const defaultOptions = {
                 particleCount: 160,
                 spread: 80,
                 origin: { y: 0.6 },
                 colors: ['#FF69B4', '#FFB6C1', '#9370DB', '#B39DDB']
-            });
+            };
+            confetti({ ...defaultOptions, ...options });
+        }
+
+        function showFloatingFeedback(emoji) {
+            const feedbackEl = document.getElementById('floatingFeedback');
+            feedbackEl.textContent = emoji;
+            feedbackEl.classList.add('active');
+            setTimeout(() => {
+                feedbackEl.classList.remove('active');
+            }, 800);
         }
 
         function showTip() {
@@ -910,70 +1105,56 @@
             prizeModal.classList.remove('active');
         }
 
-        function handleBrave() {
-            if (!currentSelectedDate) return;
-            const selectedStr = formatDate(currentSelectedDate);
-            saveRecord(selectedStr, 'success');
-            triggerConfetti();
-            refreshUI();
-            const records = loadRecords();
-            if (getWeekSuccessCount(records) >= MAX_COUNT) {
-                openPrizeModal();
-            }
-        }
-
-        function handleEncourage() {
-            if (!currentSelectedDate) return;
-            const selectedStr = formatDate(currentSelectedDate);
-            saveRecord(selectedStr, 'fail');
-            showTip();
-            refreshUI();
-        }
-
-        function handleRestart() {
-            const records = loadRecords();
-            const { totalFilled, successCount } = checkWeekStatus(records);
-            
-            // 如果本周未完成，不显示结算
-            if (totalFilled < 5) {
-                return;
+        function handleAction(score) {
+            if (!currentSelectedDate) {
+                currentSelectedDate = getToday();
             }
             
-            // 显示结算提示
-            let message = '本周挑战已结束！你的战绩已安全保存到日历中 📅。下周一花园会自动开启新的挑战，要加油哦！';
-            alert(message);
-            
-            // 场景 A：全勤完美，触发撒花
-            if (successCount === 5) {
-                triggerConfetti();
+            if (score === -1) {
+                // 需要抱抱
+                showTip();
+                vibrate([50, 50, 50]);
+            } else if (score === 1) {
+                // +1 按钮：轻量撒花 + 弹跳动画
+                triggerConfetti({
+                    particleCount: 60,
+                    spread: 60
+                });
+                showFloatingFeedback('🍊');
+                vibrate(200);
+            } else if (score === 2) {
+                // +2 按钮：豪华金色撒花 + 弹跳动画
+                triggerConfetti({
+                    particleCount: 120,
+                    spread: 80,
+                    colors: ['#FFD700', '#FFA500']
+                });
+                showFloatingFeedback('🌟🍊🌟');
+                vibrate(200);
             }
+            
+            updateProgress(score);
         }
 
         tipOverlay.addEventListener('click', () => tipOverlay.classList.remove('active'));
-        braveBtn.addEventListener('click', (e) => {
-            vibrate(200);
-            handleBrave(e);
+        
+        // 绑定操作按钮事件
+        actionButtonsEl.querySelectorAll('.action-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const score = parseInt(btn.dataset.score);
+                handleAction(score);
+            });
         });
-        encourageBtn.addEventListener('click', (e) => {
-            vibrate([50, 50, 50]);
-            handleEncourage(e);
-        });
-        restartBtn.addEventListener('click', handleRestart);
-        giftBox.addEventListener('click', () => {
-            vibrate(400);
-            triggerConfetti();
-            openPrizeModal();
-        });
+        
         closeModal.addEventListener('click', closePrizeModal);
         prizeModal.addEventListener('click', (e) => {
             if (e.target === prizeModal) closePrizeModal();
         });
 
         function refreshUI() {
-            const records = loadRecords();
-            renderPits(records);
-            renderWeekSettlement(records);
-            renderCalendar(records);
+            const data = loadGameData();
+            renderProgress(data);
+            renderCalendar(data);
             updateDateHint();
         }
 
